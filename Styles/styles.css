@@ -1,0 +1,148 @@
+
+
+table {
+    border: none;
+    margin-right: 0!important;
+    margin-left: 0!important;
+}
+
+
+
+@media print {
+    .ms-Table {
+        position: absolute;
+        page-break-before: auto!important;
+        page-break-after: auto!important;
+    }
+    .ms-Table tr {
+        position: relative;
+        page-break-inside: avoid!important;
+        page-break-after: auto!important;
+        page-break-before: auto!important;
+    }
+
+    @page {
+    size: auto;   /* auto is the initial value */
+    margin: 0 10px;  /* this affects the margin in the printer settings */
+}
+
+}
+
+
+.date-row {
+    width: 110px;
+}
+
+.ms-DatePicker {
+    margin-bottom: 0!important;
+}
+
+.ms-TextField {
+    margin-bottom: 0!important;
+}
+
+.ms-TextField-field {
+    min-width: 0!important;
+}
+
+#employeeCard {
+    padding: 0 25px;
+}
+
+#employeeCard > .ms-Table {
+    width: 651px;
+    /*margin-right: auto;*/
+    /*margin-left: auto;*/
+}
+
+.ms-Table tr th {
+    font-weight: bold;
+}
+
+.ms-Table tr td,
+.ms-Table tr th {
+    border: 1px solid #eaeaea;
+    height: 38px;
+}
+
+.ms-Table tr {
+    line-height: normal;
+    page-break-inside: avoid;
+    page-break-after: auto
+}
+
+tr[ng-repeat-start],
+tr[ng-repeat-start] + tr {
+    border-top: 1px solid #eaeaea;
+}
+
+.ms-DatePicker-table td {
+    padding: 0;
+}
+
+.clickableElem {
+    color: #0078d7!important;
+    cursor: pointer;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.spiner {
+    width: 12px;
+}
+
+.success {
+    vertical-align: middle;
+    color: #107c10;
+}
+
+.error {
+    vertical-align: middle;
+    color: #e81123;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.elipsis {
+    vertical-align: text-top;
+    width: 140px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: inline-block!important;
+}
+
+.filter {
+    width: 200px;
+    padding: 20px 0;
+}
+
+
+/*
+Styles for ms-Datapicker
+ms-Datapicker uses modifier (BEM) begins with a lowercase letter
+
+ */
+
+.ms-Icon--chevronLeft:before {
+    content: '\E76B'
+}
+
+.ms-Icon--chevronRight:before {
+    content: '\E76C'
+}
+
+.ms-Icon--event:before {
+    content: '\ECA3'
+}
+
+.ms-Icon--xCircle:before {
+    content: '\E946'
+}
+
+
+/* end*/

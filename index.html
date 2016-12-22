@@ -1,0 +1,48 @@
+<link rel="stylesheet" href="https://appsforoffice.microsoft.com/fabric/fabric-core/4.0.0/fabric.min.css">
+<link rel="stylesheet" href="https://appsforoffice.microsoft.com/fabric/fabric-js/1.0.0/fabric.components.min.css">
+<link rel="stylesheet" href="https://infoprojektgdansk.sharepoint.com/sites/SPDevInstructions/Style%20Library/Styles/styles.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://infoprojektgdansk.sharepoint.com/sites/SPDevInstructions/Style%20Library/Scripts/picker.js"></script>
+<script src="https://infoprojektgdansk.sharepoint.com/sites/SPDevInstructions/Style%20Library/Scripts/picker.date.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ngOfficeUiFabric/0.12.8/ngOfficeUiFabric.min.js"></script>
+<script src="https://infoprojektgdansk.sharepoint.com/sites/SPDevInstructions/Style%20Library/App/app.js"></script>
+<script src="https://infoprojektgdansk.sharepoint.com/sites/SPDevInstructions/Style%20Library/App/Controllers/MainController.js"></script>
+<script src="https://infoprojektgdansk.sharepoint.com/sites/SPDevInstructions/Style%20Library/App/Services/JSOMService.js"></script>
+<section id="employeeCard" ng-app="app" ng-controller="MainController">
+    <div ng-if="loading" ng-cloak class="spinner">
+        <uif-spinner> Loading...</uif-spinner>
+    </div>
+    <table ng-hide="loading && !instruction.TrainingDate" ng-cloak class="ms-Table">
+        <tr>
+            <th>Competentie</th>
+            <th>Instructie</th>
+            <th>Datum afterkenen</th>
+            <th>Datum herhaling</th>
+        </tr>
+        <tbody>
+            <tr class="avoid" ng-repeat-start="competence in ::competences track by $index">
+                <td class="avoid" rowspan="{{competence.Instructions.length+1}}"><a class="elipsis" ng-href="{{::siteUrl}}/Lists/Overzicht%20Competenties/DispForm.aspx?ID={{::competence.Id}}">{{::competence.Name}}</a></td>
+            </tr>
+            <tr ng-repeat="instruction in competence.Instructions" ng-repeat-end>
+                <td><span ng-show="editingData[instruction.Id + '-success']"> <i class="ms-Icon ms-Icon--SkypeCircleCheck
+ success"></i> </span><span ng-show="editingData[instruction.Id + '-error']"> <i class="ms-Icon ms-Icon--StatusErrorFull error"></i> </span>
+                    <a class="elipsis" ng-href="{{::siteUrl}}/Production%20instructions/Forms/DispForm.aspx?ID={{::instruction.Id}}">{{::instruction.Name}}</a></td>
+                <td class="date-row">
+                    <div ng-hide="editingData[competence.Id+'-'+instruction.Id] && !isLoaded"><span ng-hide="!instruction.TrainingDate">{{instruction.TrainingDate | date:'dd/MM/yyyy'}}</span><span ng-show="!instruction.TrainingDate">not set</span></div>
+                    <div class="ms-TextField pointer" ng-if="editingData[competence.Id+'-'+instruction.Id] && !isLoaded">
+                        <uif-datepicker uif-date-format="dd/mm/yyyy" ng-model="instruction.TrainingDate"></uif-datepicker>
+                    </div>
+                </td>
+                <td calss="date-row"><span ng-hide="!instruction.ExpiryDate">{{instruction.ExpiryDate | date:'dd/MM/yyyy'}}</span><span ng-show="!instruction.ExpiryDate">not set</span></td>
+                <td>
+                    <div class="text-center" ng-hide="editingData[competence.Id+'-'+instruction.Id] || !isVisible"><i class="ms-Icon ms-Icon--Edit clickableElem" ng-click="modify(competence.Id, instruction)"></i></div>
+                    <div class="text-center" ng-show="editingData[competence.Id+'-'+instruction.Id] && !isLoaded"><i class="ms-Icon ms-Icon--Save clickableElem" ng-click="save(competence.Id, instruction)"></i></div>
+                    <div class="spiner" ng-if="editingData[competence.Id+'-'+instruction.Id] && isLoaded">
+                        <uif-spinner></uif-spinner>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
