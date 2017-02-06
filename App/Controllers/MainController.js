@@ -18,18 +18,10 @@
             $scope.isVisible = false;
         }
 
-        // $scope.saveCompetenceTraningDate = function(competence) {
-            
-        //     $scope.editingData[competence.Id] = false;
-        //     $scope.editingData[competence.Id + '-success'] = true;
-        //     // $scope.isLoaded = true;
-        //     $scope.noChange = false;
-        //     $scope.isVisible = true;
-        // }
+        $scope.editInstructionTraningDate = function(competenceID, data) {
 
-        $scope.modify = function(competenceID, data) {
-
-            $scope.editingData[competenceID + '-' + data.Id] = true;
+            $scope.editingData[competenceID+'-'+data.Id] = true;
+            console.log($scope.editingData);
             $scope.isVisible = false;
             $scope.isLoaded = true;
 
@@ -76,7 +68,7 @@
             });
         };
 
-        $scope.updateInstructionDates = function(competenceID, data) {
+        $scope.saveInstructionTraningDate = function(competenceID, data) {
 
             if (data.TrainingDate=== undefined || data.TrainingDate == "") {
                 alert('please set the Date');

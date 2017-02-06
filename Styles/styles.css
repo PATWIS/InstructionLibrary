@@ -34,9 +34,8 @@ table {
 
 
 .date-row {
-    width: 110px;
+    width: 144px;
     text-align: center;
-    border-right: none!important;
 }
 
 
@@ -79,8 +78,7 @@ table {
 
 .ms-Table tr {
     line-height: normal;
-    page-break-inside: avoid;
-    page-break-after: auto
+
 }
 
 tr[ng-repeat-start],
