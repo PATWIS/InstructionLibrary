@@ -362,7 +362,7 @@
                     return deferred.promise;
                 };
 
-                service.getInstructionDates = function(emploteeId) {
+                     service.getInstructionsDatesForEmployee = function(emploteeId) {
                     var deferred = $q.defer();
                     contextLoaded.promise.then(function() {
 
@@ -392,6 +392,49 @@
                                     InstructieId: herhalingDataItem.get_item("Instructie").get_lookupId(),
                                     TrainingDate: herhalingDataItem.get_item("DatumAftekenen"),
                                     ExpiryDate: herhalingDataItem.get_item("DatumHerhaling")
+                                })
+
+                            }
+
+                            deferred.resolve(result);
+
+                        }, function(sender, args) {
+                            deferred.reject(args.get_message());
+                        });
+                    });
+                    return deferred.promise;
+                };
+
+                service.getCompetencesDatesForEmployee = function(emploteeId) {
+                    var deferred = $q.defer();
+                    contextLoaded.promise.then(function() {
+
+
+                        service.web = clientCtx.get_web();
+                        var list = service.web.get_lists().getByTitle('Herhaling Competenties Data');
+
+                        var query = new SP.CamlQuery();
+                        query.set_viewXml("<View><Query><Where>\
+                                                            <Eq><FieldRef Name='Medewerker' LookupId='TRUE'/><Value Type='Lookup'>" + emploteeId + "</Value></Eq>\
+                                                        </Where></Query></View>");
+
+                        var instructions = list.getItems(query);
+
+                        clientCtx.load(instructions, 'Include(ID, Competentie, Datum_x0020_herhaling, Datum_x0020_afterkenen)');
+
+                        clientCtx.executeQueryAsync(function(sender, args) {
+                            var enumerator = instructions.getEnumerator();
+                            var result = [];
+                            while (enumerator.moveNext()) {
+
+                                var listItem = enumerator.get_current();
+
+
+                                result.push({
+                                    ItemId: listItem.get_item("ID"),
+                                    CompetenceId: listItem.get_item("Competentie").get_lookupId(),
+                                    TrainingDate: listItem.get_item("Datum_x0020_afterkenen"),
+                                    ExpiryDate: listItem.get_item("Datum_x0020_herhaling")
                                 })
 
                             }
@@ -443,8 +486,66 @@
                     return deferred.promise;
                 };
 
+                service.updateCompetenceDates = function(competence, employeeId) {
+                    var deferred = $q.defer();
 
-                service.saveChanges = function(editDataItem, employeeId) {
+                    contextLoaded.promise.then(function() {
+                        service.web = clientCtx.get_web();
+                        var isNew = false;
+                        var list = service.web.get_lists().getByTitle('Herhaling Competenties Data');
+                                            
+                        if (competence.ItemId) {
+                            var listItem = list.getItemById(competence.ItemId);
+                            listItem.set_item("Datum_x0020_afterkenen", competence.TrainingDate);
+                            listItem.set_item("Datum_x0020_herhaling", competence.ExpiryDate);
+                            listItem.update();
+
+                            clientCtx.executeQueryAsync(function onQuerySucceeded() {
+                                // alert('Item updated!');
+                               
+                                deferred.resolve(isNew);
+                            }, function onQueryFailed(sender, args) {
+
+                                alert('ERROR: ' + args.get_message() + '\n' + args.get_stackTrace());
+                                console.log('ERROR: ' + args.get_message() + '\n' + args.get_stackTrace());
+                                deferred.reject();
+                            });
+
+                        } else {
+
+                            var itemCreateInfo = new SP.ListItemCreationInformation();
+                            var newItem = list.addItem(itemCreateInfo);
+
+                            var employeeLookupValue = new SP.FieldLookupValue();
+                            employeeLookupValue.set_lookupId(employeeId);
+
+                            var competenceLookupValue = new SP.FieldLookupValue();
+                            competenceLookupValue.set_lookupId(competence.Id);
+
+                            newItem.set_item("Medewerker", employeeLookupValue);
+                            newItem.set_item("Competentie", competenceLookupValue);
+                            newItem.set_item("Datum_x0020_afterkenen", competence.TrainingDate);
+                            newItem.set_item("Datum_x0020_herhaling", competence.ExpiryDate);
+                             
+                            newItem.update();
+                            clientCtx.load(list);
+ 
+                            clientCtx.executeQueryAsync(function onQuerySucceeded() {
+                               
+                                isNew = true;
+                                deferred.resolve(isNew);
+                            }, function onQueryFailed(sender, args) {
+                                alert('Request failed. ' + args.get_message() + '\n' + args.get_stackTrace());
+                                deferred.reject();
+                            });
+                        }
+                    });
+
+                    return deferred.promise;
+
+                };
+
+                service.updateInstructionDates = function(instruction, employeeId) {
                     var deferred = $q.defer();
 
                     contextLoaded.promise.then(function() {
@@ -454,10 +555,10 @@
                         
                     
                         
-                        if (editDataItem.ItemId) {
-                            var listItem = list.getItemById(editDataItem.ItemId);
-                            listItem.set_item("DatumAftekenen", editDataItem.TrainingDate);
-                            listItem.set_item("DatumHerhaling", editDataItem.ExpiryDate);
+                        if (instruction.ItemId) {
+                            var listItem = list.getItemById(instruction.ItemId);
+                            listItem.set_item("DatumAftekenen", instruction.TrainingDate);
+                            listItem.set_item("DatumHerhaling", instruction.ExpiryDate);
                             listItem.update();
 
                             clientCtx.executeQueryAsync(function onQuerySucceeded() {

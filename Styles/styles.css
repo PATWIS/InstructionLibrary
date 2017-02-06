@@ -28,10 +28,17 @@ table {
 
 }
 
+.editDate {
+    position: relative;
+}
+
 
 .date-row {
     width: 110px;
+    text-align: center;
+    border-right: none!important;
 }
+
 
 .ms-DatePicker {
     margin-bottom: 0!important;
@@ -50,9 +57,14 @@ table {
 }
 
 #employeeCard > .ms-Table {
-    width: 651px;
+    width: 900px;
+    border: 1px solid #eaeaea;
     /*margin-right: auto;*/
     /*margin-left: auto;*/
+}
+
+.edit-column {
+    border-left: none!important;
 }
 
 .ms-Table tr th {
@@ -85,6 +97,28 @@ tr[ng-repeat-start] + tr {
     cursor: pointer;
 }
 
+.editElem {
+    color: #0078d7!important;
+    cursor: pointer;
+    position: absolute;
+    right: 4px;
+    top: 3px;
+}
+
+.editElem:hover {
+    color: #004578!important;
+}
+
+.saveElem {
+    color: #0078d7!important;
+    cursor: pointer;
+    position: absolute;
+    right: 8px;
+    top: -10px;
+}
+
+
+
 .text-center {
     text-align: center;
 }
@@ -94,17 +128,24 @@ tr[ng-repeat-start] + tr {
 }
 
 .success {
-    vertical-align: middle;
     color: #107c10;
+    position: absolute;
+    left: 4px;
+    top: 3px;
+    cursor: help;
 }
 
+
 .error {
-    vertical-align: middle;
     color: #e81123;
+    position: absolute;
+    left: 4px;
+    top: 3px;
+    cursor: help;
 }
 
 .pointer {
-    cursor: pointer;
+    cursor: pointer!important;
 }
 
 .elipsis {
