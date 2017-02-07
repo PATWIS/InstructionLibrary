@@ -45,7 +45,7 @@
         <td><a class="elipsis"  ng-href="{{siteUrl}}/Production%20instructions/Forms/DispForm.aspx?ID={{obj.InstructionId}}" ng-bind="finalObject[$index-1].Instruction !== obj.Instruction ? obj.Instruction : ''"></a></td>
         <td><a class="elipsis" ng-href="{{siteUrl}}/Lists/Overzicht%20Competenties/DispForm.aspx?ID={{obj.CompetenceId}}" ng-bind="obj.Competence"></a></td>
         <td ng-bind="obj.TrainingDate | date:'dd/MM/yyyy'"></td>
-        <td ng-bind="obj.ExpiryDate | date:'dd/MM/yyyy'"></td>
+        <td ng-bind="obj.RepeatDate | date:'dd/MM/yyyy'"></td>
        
       </tr>
     </tbody>
