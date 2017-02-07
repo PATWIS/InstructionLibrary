@@ -552,9 +552,7 @@
                         service.web = clientCtx.get_web();
                         var isNew = false;
                         var list = service.web.get_lists().getByTitle('Instructie Trainingen');
-                        
-                    
-                        
+        
                         if (instruction.ItemId) {
                             var listItem = list.getItemById(instruction.ItemId);
                             listItem.set_item("DatumAftekenen", instruction.TrainingDate);
@@ -581,12 +579,12 @@
                             employeeLookupValue.set_lookupId(employeeId);
 
                             var instructieLookupValue = new SP.FieldLookupValue();
-                            instructieLookupValue.set_lookupId(editDataItem.Id);
+                            instructieLookupValue.set_lookupId(instruction.Id);
 
                             newItem.set_item("Medewerker", employeeLookupValue);
                             newItem.set_item("Instructie", instructieLookupValue);
-                            newItem.set_item("DatumAftekenen", editDataItem.TrainingDate);
-                            newItem.set_item("DatumHerhaling", editDataItem.ExpiryDate);
+                            newItem.set_item("DatumAftekenen", instruction.TrainingDate);
+                            newItem.set_item("DatumHerhaling", instruction.ExpiryDate);
                              
                             newItem.update();
                             clientCtx.load(list);

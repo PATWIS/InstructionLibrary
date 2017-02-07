@@ -20,10 +20,21 @@ table {
         page-break-after: auto!important;
         page-break-before: auto!important;
     }
+    #s4-titlerow {
+        display: none!important;
+    }
+
+    i {
+        display: none!important;
+    }
+
+    .date-row {
+    width: 80px!important;
+    }
 
     @page {
     size: auto;   /* auto is the initial value */
-    margin: 0 10px;  /* this affects the margin in the printer settings */
+    margin: 0 20px;  /* this affects the margin in the printer settings */
 }
 
 }
@@ -56,7 +67,7 @@ table {
 }
 
 #employeeCard > .ms-Table {
-    width: 900px;
+    width: 820px;
     border: 1px solid #eaeaea;
     /*margin-right: auto;*/
     /*margin-left: auto;*/
@@ -148,7 +159,7 @@ tr[ng-repeat-start] + tr {
 
 .elipsis {
     vertical-align: text-top;
-    width: 140px;
+    width: 120px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;

@@ -29,8 +29,8 @@
                 <td class="date-row" rowspan="{{competence.Instructions.length+1}}">
                     <uif-spinner ng-show="editingData[competence.Id] && isLoaded"></uif-spinner>
                     <div class="editDate" ng-hide="editingData[competence.Id] && isLoaded">
-                        <i ng-if="editingData[competence.Id + '-success']" class="ms-Icon ms-Icon--SkypeCircleCheck success" title="date was updated successfully"></i>
-                        <i ng-if="editingData[competence.Id + '-error']" class="ms-Icon ms-Icon--StatusErrorFull error" title="something went wrong, check the console (f12)"></i>
+                        <span ng-hide="editingData[competence.Id] && !isLoaded"><i ng-if="editingData[competence.Id + '-success']" class="ms-Icon ms-Icon--SkypeCircleCheck success" title="date was updated successfully"></i></span>
+                        <span ng-hide="editingData[competence.Id] && !isLoaded"><i ng-if="editingData[competence.Id + '-error']" class="ms-Icon ms-Icon--StatusErrorFull error" title="something went wrong, check the console (f12)"></i></span>
                         <span ng-hide="editingData[competence.Id] && !isLoaded">{{!competence.TrainingDate ? "not set" : (competence.TrainingDate | date:'dd/MM/yyyy') }}</span>
                         <i ng-hide="editingData[competence.Id] || !isVisible" class="ms-Icon ms-Icon--Edit editElem" ng-click="editCompetenceTraningDate(competence)"></i>     
                     </div>
@@ -50,24 +50,16 @@
                 <td class="date-row">
                     <uif-spinner ng-show="editingData[competence.Id+'-'+instruction.Id] && isLoaded"></uif-spinner>
                     <div class="editDate" ng-hide="editingData[competence.Id+'-'+instruction.Id] && isLoaded">
-                        <i ng-if="editingData[instruction.Id + '-success']" class="ms-Icon ms-Icon--SkypeCircleCheck success"></i>
-                        <i ng-if="editingData[instruction.Id + '-error']" class="ms-Icon ms-Icon--StatusErrorFull error"></i>
+                        <span ng-hide="editingData[competence.Id+'-'+instruction.Id] && !isLoaded"><i ng-if="editingData[instruction.Id + '-success']" class="ms-Icon ms-Icon--SkypeCircleCheck success"></i></span>
+                        <span ng-hide="editingData[competence.Id+'-'+instruction.Id] && !isLoaded"><i ng-if="editingData[instruction.Id + '-error']" class="ms-Icon ms-Icon--StatusErrorFull error"></i></span>
                         <span ng-hide="editingData[competence.Id+'-'+instruction.Id] && !isLoaded">{{!instruction.TrainingDate ? "not set" : instruction.TrainingDate | date:'dd/MM/yyyy'}}</span>  
-                        <i ng-hide="competence.Id+'-'+instruction.Id] || !isVisible" class="ms-Icon ms-Icon--Edit editElem" ng-click="editInstructionTraningDate(competence.Id, instruction)"></i>   
+                        <i ng-hide="editingData[competence.Id+'-'+instruction.Id] || !isVisible" class="ms-Icon ms-Icon--Edit editElem" ng-click="editInstructionTraningDate(competence.Id, instruction)"></i>   
                     </div>
                     <div class="ms-TextField" ng-if="editingData[competence.Id+'-'+instruction.Id] && !isLoaded">
                         <uif-datepicker uif-date-format="dd/mm/yyyy" ng-model="instruction.TrainingDate" ng-change="saveInstructionTraningDate(competence.Id, instruction)"></uif-datepicker>
                     </div>
                 </td>
-                <!--<td class="edit-column">
-                    <div class="text-center" ng-hide="editingData[competence.Id+'-'+instruction.Id] || !isVisible"><i class="ms-Icon ms-Icon--Edit clickableElem" ng-click="modify(competence.Id, instruction)"></i></div>
-                    <div class="text-center" ng-show="editingData[competence.Id+'-'+instruction.Id] && !isLoaded"><i class="ms-Icon ms-Icon--Save clickableElem" ng-click="save(competence.Id, instruction)"></i></div>
-                    <div class="spiner" ng-if="editingData[competence.Id+'-'+instruction.Id] && isLoaded">
-                        <uif-spinner></uif-spinner>
-                    </div>
-                </td>-->
                 <td class="date-row"><span ng-hide="!instruction.ExpiryDate">{{instruction.ExpiryDate | date:'dd/MM/yyyy'}}</span><span ng-show="!instruction.ExpiryDate">not set</span></td>
-
             </tr>
         </tbody>
     </table>

@@ -18,20 +18,18 @@
             $scope.isVisible = false;
         }
 
-        $scope.editInstructionTraningDate = function(competenceID, data) {
+        $scope.editInstructionTraningDate = function(competenceID, instruction) {
 
-            $scope.editingData[competenceID+'-'+data.Id] = true;
-            console.log($scope.editingData);
+            $scope.editingData[competenceID+'-'+instruction.Id] = true;
+            instruction.TrainingDate = '';
             $scope.isVisible = false;
             $scope.isLoaded = true;
 
-            if (!data.Category) {
+            if (!instruction.Category) {
 
-                JSOMService.getInstructionCategory(data.Id).then(function(result) {
-                    $scope.CategoryLoaded = true;
-                    data.Category = result.Category;
+                JSOMService.getInstructionCategory(instruction.Id).then(function(result) {
+                    instruction.Category = result.Category;
                     $scope.isLoaded = false;
-
                 });
 
             } else {
@@ -43,8 +41,6 @@
         $scope.saveCompetenceTraningDate = function(competence) {
 
             $scope.isLoaded = true;
-            $scope.noChange = false;
-
             JSOMService.updateCompetenceDates(competence, $scope.employeeId).then(function(isNew) {
                $scope.editingData[competence.Id] = false;
                $scope.editingData[competence.Id + '-success'] = true;
@@ -68,23 +64,16 @@
             });
         };
 
-        $scope.saveInstructionTraningDate = function(competenceID, data) {
+        $scope.saveInstructionTraningDate = function(competenceID, instruction) {
 
-            if (data.TrainingDate=== undefined || data.TrainingDate == "") {
-                alert('please set the Date');
-                return;
-            }
-
+           
             $scope.isLoaded = true;
-            $scope.noChange = false;
-            setInstructionRepeatDate(data);
-
-            JSOMService.updateInstructionDates(data, $scope.employeeId).then(function(isNew) {
-                $scope.editingData[competenceID + '-' + data.Id] = false;
-                $scope.editingData[data.Id + '-success'] = true;
+            setInstructionRepeatDate(instruction);
+            JSOMService.updateInstructionDates(instruction, $scope.employeeId).then(function(isNew) {
+                $scope.editingData[competenceID + '-' + instruction.Id] = false;
+                $scope.editingData[instruction.Id + '-success'] = true;
                 $scope.isLoaded = false;
                 $scope.isVisible = true;
-
                 if (isNew) {
                     $scope.loading = true;
                     init();
@@ -93,13 +82,13 @@
                 // $scope.reset(); 
             }).catch(function() {
 
-                $scope.editingData[competenceID + '-' + data.Id] = false;
-                $scope.editingData[data.Id + '-error'] = true;
+                $scope.editingData[competenceID + '-' + instruction.Id] = false;
+                $scope.editingData[instruction.Id + '-error'] = true;
                 $scope.isLoaded = false;
                 $scope.isVisible = true;
-                data.TrainingDate = null;
-                data.ExpiryDate = null;
-                setInstructionRepeatDate(data);
+                instruction.TrainingDate = null;
+                instruction.ExpiryDate = null;
+                setInstructionRepeatDate(instruction);
 
             });
         };
@@ -132,7 +121,7 @@
                                 instruction.ExpiryDate = addNYears(i.TrainingDate, 3);
                                 break;
                             default:
-                                instruction.ExpiryDate = addNYears(i.TrainingDate, 99);
+                                instruction.ExpiryDate = null;
 
                         }
 
