@@ -29,7 +29,6 @@
             </div>
             
 <table class="ms-Table">
-    <thead>
       <tr>
       <!-- <th>#</th> -->
       <th>Medewerker</th>        
@@ -39,9 +38,8 @@
       <th>Datum herhaling</th>        
 
       </tr>
-    </thead>
     <tbody>
-      <tr ng-init="finalObject" ng-repeat="obj in finalObject | dataFilters:filterValue track by $index" >
+      <tr class="avoid" ng-init="finalObject" ng-repeat="obj in finalObject | dataFilters:filterValue track by $index" >
         <!-- <td>{{$index +1}}</td> -->
         <td><a class="elipsis" ng-href="{{siteUrl}}/Lists/Overzicht%20Medewerkers/Item/displayifs.aspx?ID={{obj.EmployeeId}}" ng-bind="finalObject[$index-1].Name !== obj.Name ? obj.Name : ''"></a></td>
         <td><a class="elipsis"  ng-href="{{siteUrl}}/Production%20instructions/Forms/DispForm.aspx?ID={{obj.InstructionId}}" ng-bind="finalObject[$index-1].Instruction !== obj.Instruction ? obj.Instruction : ''"></a></td>
