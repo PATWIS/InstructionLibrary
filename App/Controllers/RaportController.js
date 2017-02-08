@@ -98,7 +98,7 @@
 
                         employee.Competences.forEach(function(competence) {
 
-                            competence.Instructions.forEach(function(instruction) {
+                                competence.Instructions.forEach(function(instruction) {
 
                                 var existEmployee = resultLookupMedewerkerId[employee.Id];
 
@@ -141,7 +141,7 @@
                                     CompetenceId: competence.Id,
                                     Competence: competence.Name,
                                     TrainingDate: existInstruction.TrainingDate,
-                                    ExpiryDate: existInstruction.ExpiryDate
+                                    RepeatDate: existInstruction.RepeatDate
                                 });
 
                             })
@@ -149,7 +149,9 @@
                         })
 
                     });
-
+                     $scope.finalObject.sort(function (a, b) {
+                            return new Date(b.RepeatDate) - new Date(a.RepeatDate);
+                        });
                     localStorage.setItem("instructions", JSON.stringify($scope.finalObject));
                 });
 
@@ -175,7 +177,7 @@
 
                 for (var i = 0; i < items.length; i++) {
 
-                    var expiry = new Date(items[i].ExpiryDate);
+                    var expiry = new Date(items[i].RepeatDate); 
                     if (expiry < d) {
                         arrayToReturn.push(items[i]);
 
