@@ -16,7 +16,7 @@
                 service.self = service;
                 service.clientCtx = clientCtx;
 
-                service.changeContext = function(webUrl) {
+                service.changeContext = function(webUrl) { 
                     var deferred = $q.defer();
                     contextLoaded.promise.then(function() {
                         if (webUrl) {
@@ -331,7 +331,7 @@
                                             InstructieId: herhalingDataItem.get_item("Instructie").get_lookupId(),
                                             InstructieName: herhalingDataItem.get_item("Instructie_x003a_Documentnummer").get_lookupValue(),
                                             TrainingDate: herhalingDataItem.get_item("DatumAftekenen"),
-                                            ExpiryDate: herhalingDataItem.get_item("DatumHerhaling")
+                                            RepeatDate: herhalingDataItem.get_item("DatumHerhaling")
                                         })
 
                                     }
@@ -391,7 +391,7 @@
                                     ItemId: herhalingDataItem.get_item("ID"),
                                     InstructieId: herhalingDataItem.get_item("Instructie").get_lookupId(),
                                     TrainingDate: herhalingDataItem.get_item("DatumAftekenen"),
-                                    ExpiryDate: herhalingDataItem.get_item("DatumHerhaling")
+                                    RepeatDate: herhalingDataItem.get_item("DatumHerhaling")
                                 })
 
                             }
@@ -434,7 +434,7 @@
                                     ItemId: listItem.get_item("ID"),
                                     CompetenceId: listItem.get_item("Competentie").get_lookupId(),
                                     TrainingDate: listItem.get_item("Datum_x0020_afterkenen"),
-                                    ExpiryDate: listItem.get_item("Datum_x0020_herhaling")
+                                    RepeatDate: listItem.get_item("Datum_x0020_herhaling")
                                 })
 
                             }
@@ -497,7 +497,7 @@
                         if (competence.ItemId) {
                             var listItem = list.getItemById(competence.ItemId);
                             listItem.set_item("Datum_x0020_afterkenen", competence.TrainingDate);
-                            listItem.set_item("Datum_x0020_herhaling", competence.ExpiryDate);
+                            listItem.set_item("Datum_x0020_herhaling", competence.RepeatDate);
                             listItem.update();
 
                             clientCtx.executeQueryAsync(function onQuerySucceeded() {
@@ -525,7 +525,7 @@
                             newItem.set_item("Medewerker", employeeLookupValue);
                             newItem.set_item("Competentie", competenceLookupValue);
                             newItem.set_item("Datum_x0020_afterkenen", competence.TrainingDate);
-                            newItem.set_item("Datum_x0020_herhaling", competence.ExpiryDate);
+                            newItem.set_item("Datum_x0020_herhaling", competence.RepeatDate);
                              
                             newItem.update();
                             clientCtx.load(list);
@@ -556,7 +556,7 @@
                         if (instruction.ItemId) {
                             var listItem = list.getItemById(instruction.ItemId);
                             listItem.set_item("DatumAftekenen", instruction.TrainingDate);
-                            listItem.set_item("DatumHerhaling", instruction.ExpiryDate);
+                            listItem.set_item("DatumHerhaling", instruction.RepeatDate);
                             listItem.update();
 
                             clientCtx.executeQueryAsync(function onQuerySucceeded() {
@@ -584,7 +584,7 @@
                             newItem.set_item("Medewerker", employeeLookupValue);
                             newItem.set_item("Instructie", instructieLookupValue);
                             newItem.set_item("DatumAftekenen", instruction.TrainingDate);
-                            newItem.set_item("DatumHerhaling", instruction.ExpiryDate);
+                            newItem.set_item("DatumHerhaling", instruction.RepeatDate);
                              
                             newItem.update();
                             clientCtx.load(list);
