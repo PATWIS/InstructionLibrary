@@ -12,7 +12,7 @@
         });
 
         $scope.finalObject = false;
-        $scope.dataFiltersValues = ["ends for 1 month", "ends for 2 months"];
+        $scope.dataFiltersValues = ["1 maanden", "2 maanden"];
         $scope.filterValue = $scope.dataFiltersValues[""];
         $scope.refresh = function() {
             $scope.finalObject = false;

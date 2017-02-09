@@ -18,12 +18,12 @@
 <p ng-cloak ng-show="errorMsg" ><span>Something went wrong: </span>{{error}}</p>
 <div ng-cloak ng-show="finalObject" style="width: 900px;">
 
-<p class="clickableElem" ng-click="refresh()"><span><i class="ms-Icon ms-Icon--Refresh"></i> Refresh database</span></p>
+<p class="clickableElem" ng-click="refresh()"><span><i class="ms-Icon ms-Icon--Refresh"></i>Verversen databank</span></p>
 
 <div class="ms-TextField filter">
-                <label class="ms-Label">Filter - Datum herhaling</label>
+                <label class="ms-Label">Filter - Datum herhaling eindigt met in:</label>
                 <select class="ms-TextField-field" ng-model="filterValue">
-                  <option value="">ends for 3 months</option>
+                  <option value="">3 maanden</option>
                     <option ng-repeat="d in dataFiltersValues" value="{{$index}}" placeholder="select filter view">{{d}}</option>
                 </select>
             </div>

@@ -25,7 +25,7 @@
         </tr>
         <tbody>
             <tr ng-repeat-start="competence in ::competences track by $index">
-                <td rowspan="{{competence.Instructions.length+1}}"><a class="elipsis" ng-href="{{::siteUrl}}/Lists/Overzicht%20Competenties/DispForm.aspx?ID={{::competence.Id}}">{{::competence.Name}}</a></td>
+                <td rowspan="{{competence.Instructions.length+1}}"><a class="elipsis" ng-href="{{::siteUrl}}/Lists/Overzicht%20Competenties/DispForm.aspx?ID={{::competence.Id}}" title="{{::competence.Name}}">{{::competence.Name}}</a></td>
                 <td class="date-row" rowspan="{{competence.Instructions.length+1}}">
                     <uif-spinner ng-show="editingData[competence.Id+'--traningDate'] && isLoaded"></uif-spinner>
                     <div class="editDate" ng-hide="editingData[competence.Id+'--traningDate'] && isLoaded">
@@ -54,7 +54,7 @@
 
             <tr ng-repeat="instruction in competence.Instructions" ng-repeat-end>
                 <td>
-                    <a class="elipsis" ng-href="{{::siteUrl}}/Production%20instructions/Forms/DispForm.aspx?ID={{::instruction.Id}}">{{::instruction.Name}}</a>
+                    <a class="elipsis" ng-href="{{::siteUrl}}/Production%20instructions/Forms/DispForm.aspx?ID={{::instruction.Id}}" title="{{::instruction.Name}}">{{::instruction.Name}}</a>
                 </td>
                 <td class="date-row">
                     <uif-spinner ng-show="editingData[competence.Id+'-'+instruction.Id] && isLoaded"></uif-spinner>
