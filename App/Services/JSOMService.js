@@ -1,24 +1,24 @@
-(function() {
+(function () {
     'use strict';
 
     // defined JSOM service
-    angular.module('app').provider('JSOMService', function() {
+    angular.module('app').provider('JSOMService', function () {
         var clientCtx;
-        this.$get = ['$q', "$log", function($q, $log) {
+        this.$get = ['$q', "$log", function ($q, $log) {
             var contextLoaded = $q.defer();
-            SP.SOD.executeFunc('sp.js', 'SP.ClientContext', function() {
+            SP.SOD.executeFunc('sp.js', 'SP.ClientContext', function () {
                 clientCtx = SP.ClientContext.get_current();
                 contextLoaded.resolve();
-            }); 
+            });
 
             function createServiceForConfiguration() {
                 var service = {};
                 service.self = service;
                 service.clientCtx = clientCtx;
 
-                service.changeContext = function(webUrl) { 
+                service.changeContext = function (webUrl) {
                     var deferred = $q.defer();
-                    contextLoaded.promise.then(function() {
+                    contextLoaded.promise.then(function () {
                         if (webUrl) {
                             clientCtx = new SP.ClientContext(webUrl);
                         } else {
@@ -26,17 +26,17 @@
                         }
                         deferred.resolve();
                     });
-                    return deferred.promise; 
+                    return deferred.promise;
                 };
 
 
-                service.getSiteUrl = function() {
+                service.getSiteUrl = function () {
                     var deferred = $q.defer();
-                    contextLoaded.promise.then(function() {
+                    contextLoaded.promise.then(function () {
                         var ctx = new SP.ClientContext();
                         var site = ctx.get_site();
                         ctx.load(site);
-                        ctx.executeQueryAsync(function(s, a) {
+                        ctx.executeQueryAsync(function (s, a) {
 
                             var result = site.get_url();
                             deferred.resolve(result);
@@ -47,9 +47,9 @@
                     return deferred.promise;
                 };
 
-                service.getEmployees = function() {
+                service.getEmployees = function () {
                     var deferred = $q.defer();
-                    contextLoaded.promise.then(function() {
+                    contextLoaded.promise.then(function () {
 
                         service.web = clientCtx.get_web();
                         var employeesList = service.web.get_lists().getByTitle('Overzicht Medewerkers');
@@ -58,7 +58,7 @@
 
                         clientCtx.load(employees, 'Include(Title, ID, Competentie)');
 
-                        clientCtx.executeQueryAsync(function(sender, args) {
+                        clientCtx.executeQueryAsync(function (sender, args) {
                             var enumerator = employees.getEnumerator();
                             var result = [];
 
@@ -68,7 +68,7 @@
                                 var competencesVals = employeesItem.get_item("Competentie"); //get multi lookup value (SP.FieldLookupValue[])
 
                                 if (competencesVals.length !== 0) {
-                                   for (var i = 0; i < competencesVals.length; i++) {
+                                    for (var i = 0; i < competencesVals.length; i++) {
                                         competences.push({
                                             Id: competencesVals[i].get_lookupId()
                                         });
@@ -81,16 +81,16 @@
                                 }
                             }
                             deferred.resolve(result);
-                        }, function(sender, args) {
+                        }, function (sender, args) {
                             deferred.reject(args.get_message());
                         });
                     });
                     return deferred.promise;
                 };
 
-                service.getEmployeeCompetences = function(emploteeId) {
+                service.getEmployeeCompetences = function (emploteeId) {
                     var deferred = $q.defer();
-                    contextLoaded.promise.then(function() {
+                    contextLoaded.promise.then(function () {
 
                         service.web = clientCtx.get_web();
                         var employeesList = service.web.get_lists().getByTitle('Overzicht Medewerkers');
@@ -102,7 +102,7 @@
 
                         var employees = employeesList.getItems(query);
                         clientCtx.load(employees, 'Include(Title, ID, Competentie)');
-                        clientCtx.executeQueryAsync(function(sender, args) {
+                        clientCtx.executeQueryAsync(function (sender, args) {
                             var enumerator = employees.getEnumerator();
                             var result = [];
                             while (enumerator.moveNext()) {
@@ -126,16 +126,16 @@
                                 }
                             }
                             deferred.resolve(result);
-                        }, function(sender, args) {
+                        }, function (sender, args) {
                             deferred.reject(args.get_message());
                         });
                     });
                     return deferred.promise;
                 };
 
-                service.getCompetenceInstructions = function(competenceIds) {
+                service.getCompetenceInstructions = function (competenceIds) {
                     var deferred = $q.defer();
-                    contextLoaded.promise.then(function() {
+                    contextLoaded.promise.then(function () {
 
                         service.web = clientCtx.get_web();
 
@@ -144,7 +144,7 @@
                         clientCtx.load(listRootFolder);
 
                         var query = "<View><Query><Where><In><FieldRef Name='ID'/><Values>";
-                        angular.forEach(competenceIds, function(value, index) {
+                        angular.forEach(competenceIds, function (value, index) {
                             query = query + "<Value Type='Counter'>" + value + "</Value>";
                         });
 
@@ -156,7 +156,7 @@
 
                         clientCtx.load(competences, 'Include(Title, ID, Competentie_x0020_documenten)');
 
-                        clientCtx.executeQueryAsync(function(sender, args) {
+                        clientCtx.executeQueryAsync(function (sender, args) {
 
                             var listURL = listRootFolder.get_serverRelativeUrl();
                             var enumerator = competences.getEnumerator();
@@ -192,7 +192,7 @@
 
                             deferred.resolve(result);
 
-                        }, function(sender, args) {
+                        }, function (sender, args) {
 
                             deferred.reject(args.get_message());
 
@@ -201,9 +201,9 @@
                     return deferred.promise;
                 };
 
-                service.getCompetences = function() {
+                service.getCompetences = function () {
                     var deferred = $q.defer();
-                    contextLoaded.promise.then(function() {
+                    contextLoaded.promise.then(function () {
 
                         service.web = clientCtx.get_web();
                         var list = service.web.get_lists().getByTitle('Overzicht Competenties');
@@ -212,7 +212,7 @@
 
                         clientCtx.load(competences, 'Include(Title, ID, Competentie_x0020_documenten)');
 
-                        clientCtx.executeQueryAsync(function(sender, args) {
+                        clientCtx.executeQueryAsync(function (sender, args) {
 
                             var enumerator = competences.getEnumerator();
                             var result = [];
@@ -242,7 +242,7 @@
 
                             deferred.resolve(result);
 
-                        }, function(sender, args) {
+                        }, function (sender, args) {
 
                             deferred.reject(args.get_message());
 
@@ -252,9 +252,9 @@
                 };
 
 
-                service.getInstructionCategory = function(Id) {
+                service.getInstructionCategory = function (Id) {
                     var deferred = $q.defer();
-                    contextLoaded.promise.then(function() {
+                    contextLoaded.promise.then(function () {
 
                         service.web = clientCtx.get_web();
                         var instructionsList = service.web.get_lists().getByTitle('Productie instructies documenten');
@@ -262,16 +262,16 @@
 
                         clientCtx.load(listItem);
 
-                        clientCtx.executeQueryAsync(function(sender, args) {
+                        clientCtx.executeQueryAsync(function (sender, args) {
 
                             var result = {};
                             result.Id = listItem.get_item("ID");
                             result.Category = listItem.get_item("Categorie");
 
-                          
+
                             deferred.resolve(result);
 
-                        }, function(sender, args) {
+                        }, function (sender, args) {
                             // alert('Request failed. \nError: ' + args.get_message() + '\nStackTrace: ' + args.get_stackTrace());
                             deferred.reject(args.get_message());
 
@@ -280,9 +280,9 @@
                     return deferred.promise;
                 };
 
-                service.getHerhalingData = function() {
+                service.getHerhalingData = function () {
                     var deferred = $q.defer();
-                    contextLoaded.promise.then(function() {
+                    contextLoaded.promise.then(function () {
                         var listTitle = 'Instructie Trainingen';
                         var viewTitle = 'Expire for 3 months';
 
@@ -294,8 +294,10 @@
                             context.load(view);
 
                             context.executeQueryAsync(
-                                function(sender, args) { getItemsFromList(listTitle, "<View><RowLimit>5000</RowLimit><Query>" + view.get_viewQuery() + "</Query></View>") },
-                                function(sender, args) { alert("error: " + args.get_message()); }
+                                function (sender, args) {
+                                    getItemsFromList(listTitle, "<View><RowLimit>5000</RowLimit><Query>" + view.get_viewQuery() + "</Query></View>");                                  
+                                },
+                                function (sender, args) { alert("error: " + args.get_message()); }
                             );
                         }
 
@@ -306,19 +308,20 @@
                             var itemPosition = null;
                             var result = [];
 
-                            var getListItemsByListItemCollection = function() {
+                            var getListItemsByListItemCollection = function () {
 
                                 var camlQuery = new SP.CamlQuery();
 
                                 camlQuery.set_listItemCollectionPosition(itemPosition);
                                 // var query = "<View><RowLimit>5000</RowLimit></View>";
                                 camlQuery.set_viewXml(queryText);
-
+                               
                                 var instructions = list.getItems(camlQuery);
 
                                 clientCtx.load(instructions);
 
-                                clientCtx.executeQueryAsync(function(sender, args) {
+                                clientCtx.executeQueryAsync(function (sender, args) {
+
                                     var enumerator = instructions.getEnumerator();
 
                                     while (enumerator.moveNext()) {
@@ -344,7 +347,7 @@
                                         deferred.resolve(result);
                                     }
 
-                                }, function(sender, args) {
+                                }, function (sender, args) {
                                     deferred.reject(args.get_message());
                                 });
 
@@ -362,9 +365,9 @@
                     return deferred.promise;
                 };
 
-                     service.getInstructionsDatesForEmployee = function(emploteeId) {
+                service.getInstructionsDatesForEmployee = function (emploteeId) {
                     var deferred = $q.defer();
-                    contextLoaded.promise.then(function() {
+                    contextLoaded.promise.then(function () {
 
 
                         service.web = clientCtx.get_web();
@@ -379,7 +382,7 @@
 
                         clientCtx.load(instructions, 'Include(ID, Instructie, DatumAftekenen, DatumHerhaling)');
 
-                        clientCtx.executeQueryAsync(function(sender, args) {
+                        clientCtx.executeQueryAsync(function (sender, args) {
                             var enumerator = instructions.getEnumerator();
                             var result = [];
                             while (enumerator.moveNext()) {
@@ -398,16 +401,16 @@
 
                             deferred.resolve(result);
 
-                        }, function(sender, args) {
+                        }, function (sender, args) {
                             deferred.reject(args.get_message());
                         });
                     });
                     return deferred.promise;
                 };
 
-                service.getCompetencesDatesForEmployee = function(emploteeId) {
+                service.getCompetencesDatesForEmployee = function (emploteeId) {
                     var deferred = $q.defer();
-                    contextLoaded.promise.then(function() {
+                    contextLoaded.promise.then(function () {
 
 
                         service.web = clientCtx.get_web();
@@ -422,7 +425,7 @@
 
                         clientCtx.load(instructions, 'Include(ID, Competentie, Datum_x0020_herhaling, Datum_x0020_afterkenen)');
 
-                        clientCtx.executeQueryAsync(function(sender, args) {
+                        clientCtx.executeQueryAsync(function (sender, args) {
                             var enumerator = instructions.getEnumerator();
                             var result = [];
                             while (enumerator.moveNext()) {
@@ -441,16 +444,16 @@
 
                             deferred.resolve(result);
 
-                        }, function(sender, args) {
+                        }, function (sender, args) {
                             deferred.reject(args.get_message());
                         });
                     });
                     return deferred.promise;
                 };
 
-                service.getEmployeeInstructions = function() {
+                service.getEmployeeInstructions = function () {
                     var deferred = $q.defer();
-                    contextLoaded.promise.then(function() {
+                    contextLoaded.promise.then(function () {
 
                         service.web = clientCtx.get_web();
                         var employeeInstructionsList = service.web.get_lists().getByTitle('Instructie Trainingen');
@@ -461,7 +464,7 @@
 
                         clientCtx.load(employeeInstructions, 'Include(Medewerker, Instructie, Instructie_x003a_Documentnummer, DatumAftekenen, DatumHerhaling)');
 
-                        clientCtx.executeQueryAsync(function(sender, args) {
+                        clientCtx.executeQueryAsync(function (sender, args) {
                             var enumerator = employeeInstructions.getEnumerator();
                             var result = [];
                             while (enumerator.moveNext()) {
@@ -477,7 +480,7 @@
 
                             deferred.resolve(result);
 
-                        }, function(sender, args) {
+                        }, function (sender, args) {
 
                             deferred.reject(args.get_message());
 
@@ -486,14 +489,14 @@
                     return deferred.promise;
                 };
 
-                service.updateCompetenceDates = function(competence, employeeId) {
+                service.updateCompetenceDates = function (competence, employeeId) {
                     var deferred = $q.defer();
 
-                    contextLoaded.promise.then(function() {
+                    contextLoaded.promise.then(function () {
                         service.web = clientCtx.get_web();
                         var isNew = false;
                         var list = service.web.get_lists().getByTitle('Herhaling Competenties Data');
-                                            
+
                         if (competence.ItemId) {
                             var listItem = list.getItemById(competence.ItemId);
                             listItem.set_item("Datum_x0020_afterkenen", competence.TrainingDate);
@@ -502,7 +505,7 @@
 
                             clientCtx.executeQueryAsync(function onQuerySucceeded() {
                                 // alert('Item updated!');
-                               
+
                                 deferred.resolve(isNew);
                             }, function onQueryFailed(sender, args) {
 
@@ -526,12 +529,12 @@
                             newItem.set_item("Competentie", competenceLookupValue);
                             newItem.set_item("Datum_x0020_afterkenen", competence.TrainingDate);
                             newItem.set_item("Datum_x0020_herhaling", competence.RepeatDate);
-                             
+
                             newItem.update();
                             clientCtx.load(list);
- 
+
                             clientCtx.executeQueryAsync(function onQuerySucceeded() {
-                               
+
                                 isNew = true;
                                 deferred.resolve(isNew);
                             }, function onQueryFailed(sender, args) {
@@ -545,14 +548,14 @@
 
                 };
 
-                service.updateInstructionDates = function(instruction, employeeId) {
+                service.updateInstructionDates = function (instruction, employeeId) {
                     var deferred = $q.defer();
 
-                    contextLoaded.promise.then(function() {
+                    contextLoaded.promise.then(function () {
                         service.web = clientCtx.get_web();
                         var isNew = false;
                         var list = service.web.get_lists().getByTitle('Instructie Trainingen');
-        
+
                         if (instruction.ItemId) {
                             var listItem = list.getItemById(instruction.ItemId);
                             listItem.set_item("DatumAftekenen", instruction.TrainingDate);
@@ -561,7 +564,7 @@
 
                             clientCtx.executeQueryAsync(function onQuerySucceeded() {
                                 // alert('Item updated!');
-                               
+
                                 deferred.resolve(isNew);
                             }, function onQueryFailed(sender, args) {
 
@@ -585,19 +588,19 @@
                             newItem.set_item("Instructie", instructieLookupValue);
                             newItem.set_item("DatumAftekenen", instruction.TrainingDate);
                             newItem.set_item("DatumHerhaling", instruction.RepeatDate);
-                             
+
                             newItem.update();
                             clientCtx.load(list);
- 
+
                             clientCtx.executeQueryAsync(function onQuerySucceeded() {
-                               
+
                                 isNew = true;
                                 deferred.resolve(isNew);
                             }, function onQueryFailed(sender, args) {
                                 alert('Request failed. ' + args.get_message() + '\n' + args.get_stackTrace());
                                 deferred.reject();
                             });
-                            
+
 
                         }
 
