@@ -106,6 +106,12 @@ tr[ng-repeat-start] + tr {
     cursor: pointer;
 }
 
+.refresh {
+    color: #0078d7!important;
+    cursor: pointer;
+    width: 150px;
+}
+
 .editElem {
     color: #0078d7!important;
     cursor: pointer;
@@ -168,7 +174,7 @@ tr[ng-repeat-start] + tr {
 
 .filter {
     width: 200px;
-    padding: 20px 0;
+    padding: 20px 0;  
 }
 
 
@@ -196,3 +202,30 @@ ms-Datapicker uses modifier (BEM) begins with a lowercase letter
 
 
 /* end*/
+
+.ms-DatePicker-input {
+    cursor: pointer;
+} 
+
+.ms-DatePicker-event {
+    cursor: default!important;
+} 
+
+
+.ngdialog.ngdialog-theme-plain .ngdialog-content {
+    background-color: #fff;
+}
+
+.ngdialog.ngdialog-theme-plain .ngdialog-content h1 {
+    color: #000;
+}
+
+.ngdialog.ngdialog-theme-plain .mt {
+    margin-top: 15px;
+}
+
+
+.ngdialog-buttons {
+    text-align: right;
+}
+

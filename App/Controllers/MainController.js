@@ -2,36 +2,100 @@
 
     'use strict';
 
-    angular.module('app').controller('MainController', ['$scope', 'JSOMService', MainController]);
+    angular.module('app').controller('MainController', ['$scope', 'JSOMService', 'ngDialog', '$timeout', MainController]);
 
-    function MainController($scope, JSOMService, $timeout) {
+    function MainController($scope, JSOMService, ngDialog, $timeout) {
         $scope.loading = true;
         $scope.employeeId = getUrlVars();
         $scope.editingData = {};
         $scope.isVisible = true;
         $scope.isLoaded = false;
 
-        $scope.editCompetenceTraningDate = function (competence) {
 
-            $scope.editingData[competence.Id + "--traningDate"] = true;
+        $scope.isValid = function (obj) {
+            if (!obj.EditDate) {
+                return true;
+            } else {
+                return false;
+            }
+            
+        };
 
-            competence.TrainingDate = '';
-            $scope.isVisible = false;
+        $scope.editCompetenceTraningDate = function (data) {
+
+            if (!data.TrainingDate) {
+                data.TrainingDate = "";
+            }
+            $scope.nameLabel = "Competentie";
+            $scope.dateLabel = "Datum aftekenen";
+            var dialog = ngDialog.open({
+                closeByDocument: false,
+                template: 'editDateNgDialog',
+                className: 'ngdialog-theme-plain',
+                scope: $scope,
+                data: {
+                    Object: angular.copy(data),
+                    EditDate: angular.copy(data.TrainingDate),
+                    NotSet: false
+                }
+            });
+
+            dialog.closePromise.then(function (ngDialogData) {
+                if (ngDialogData.value) {
+                    var competence = ngDialogData.value.Object;
+                    var traningDate = ngDialogData.value.EditDate;
+                    if (ngDialogData.value.NotSet) {
+                        traningDate = null;
+                    }
+                    $scope.editingData[competence.Id + "--traningDate"] = true;
+                    $scope.isVisible = false;
+                    $scope.isLoaded = true;
+                    data.TrainingDate = traningDate;
+                    competence.TrainingDate = traningDate;
+                    $scope.saveCompetenceTraningDate(competence);
+                }
+            });
         }
 
-        $scope.editCompetenceRepeatDate = function (competence) {
 
-            $scope.editingData[competence.Id + "--repeatDate"] = true;
-            competence.RepeatDate = '';
-            $scope.isVisible = false;
+        $scope.editCompetenceRepeatDate = function (data) {
+
+            if (!data.RepeatDate) {
+                data.RepeatDate = "";
+            }
+            $scope.nameLabel = "Competentie";
+            $scope.dateLabel = "Datum herhaling";
+            var dialog = ngDialog.open({
+                closeByDocument: false,
+                template: 'editDateNgDialog',
+                className: 'ngdialog-theme-plain',
+                scope: $scope,
+                data: {
+                    Object: angular.copy(data),
+                    EditDate: angular.copy(data.RepeatDate),
+                    NotSet: false
+                }
+            });
+
+            dialog.closePromise.then(function (ngDialogData) {
+                if (ngDialogData.value) {
+                    var competence = ngDialogData.value.Object;
+                    var repeatDate = ngDialogData.value.EditDate;
+                    if (ngDialogData.value.NotSet) {
+                        repeatDate = null;
+                    }
+
+                    $scope.editingData[competence.Id + "--repeatDate"] = true;
+                    $scope.isVisible = false;
+                    $scope.isLoaded = true;
+                    data.RepeatDate = repeatDate;
+                    competence.RepeatDate = repeatDate;
+                    $scope.saveCompetenceRepeatDate(competence);
+                }
+            });
         }
 
         $scope.editInstructionTraningDate = function (competenceID, instruction) {
-
-            $scope.editingData[competenceID + '-' + instruction.Id] = true;
-            instruction.TrainingDate = '';
-            $scope.isVisible = false;
-            $scope.isLoaded = true;
 
             if (!instruction.Category) {
 
@@ -40,18 +104,49 @@
                     $scope.isLoaded = false;
                 });
 
-            } else {
-                $scope.isLoaded = false;
             }
+
+            if (!instruction.TrainingDate) {
+                instruction.TrainingDate = "";
+            }
+            $scope.nameLabel = "Instructie";
+            $scope.dateLabel = "Datum aftekenen";
+            var dialog = ngDialog.open({
+                closeByDocument: false,
+                template: 'editDateNgDialog',
+                className: 'ngdialog-theme-plain',
+                scope: $scope,
+                data: {
+                    Object: angular.copy(instruction),
+                    EditDate: angular.copy(instruction.TrainingDate),
+                    NotSet: false
+                }
+            });
+
+            dialog.closePromise.then(function (ngDialogData) {
+                if (ngDialogData.value) {
+                    var competence = ngDialogData.value.Object;
+                    var traningDate = ngDialogData.value.EditDate;
+                    if (ngDialogData.value.NotSet) {
+                        traningDate = null;
+                    }
+                    $scope.editingData[competenceID + '-' + instruction.Id] = true;
+                    $scope.isVisible = false;
+                    $scope.isLoaded = true;
+                    instruction.TrainingDate = traningDate;
+                    competence.TrainingDate = traningDate;
+                    $scope.saveInstructionTraningDate(competenceID, instruction);
+                }
+            });
 
         };
 
         $scope.saveCompetenceTraningDate = function (competence) {
 
-            $scope.isLoaded = true;
             JSOMService.updateCompetenceDates(competence, $scope.employeeId).then(function (isNew) {
                 $scope.editingData[competence.Id + "--traningDate"] = false;
                 $scope.editingData[competence.Id + "--traningDate" + '-success'] = true;
+                $scope.editingData[competence.Id + "--traningDate" + '-error'] = false;
                 $scope.isLoaded = false;
                 $scope.isVisible = true;
 
@@ -63,6 +158,7 @@
             }).catch(function () {
 
                 $scope.editingData[competence.Id + "--traningDate"] = false;
+                $scope.editingData[competence.Id + "--traningDate" + '-success'] = false;
                 $scope.editingData[competence.Id + "--traningDate" + '-error'] = true;
                 $scope.isLoaded = false;
                 $scope.isVisible = true;
@@ -78,6 +174,7 @@
             JSOMService.updateCompetenceDates(competence, $scope.employeeId).then(function (isNew) {
                 $scope.editingData[competence.Id + "--repeatDate"] = false;
                 $scope.editingData[competence.Id + "--repeatDate" + '-success'] = true;
+                $scope.editingData[competence.Id + "--repeatDate" + '-error'] = false;
                 $scope.isLoaded = false;
                 $scope.isVisible = true;
 
@@ -89,6 +186,7 @@
             }).catch(function () {
 
                 $scope.editingData[competence.Id + "--repeatDate"] = false;
+                $scope.editingData[competence.Id + "--repeatDate" + '-success'] = false;
                 $scope.editingData[competence.Id + "--repeatDate" + '-error'] = true;
                 $scope.isLoaded = false;
                 $scope.isVisible = true;
@@ -100,12 +198,12 @@
 
         $scope.saveInstructionTraningDate = function (competenceID, instruction) {
 
-
             $scope.isLoaded = true;
             setInstructionRepeatDate(instruction);
             JSOMService.updateInstructionDates(instruction, $scope.employeeId).then(function (isNew) {
                 $scope.editingData[competenceID + '-' + instruction.Id] = false;
                 $scope.editingData[instruction.Id + '-success'] = true;
+                $scope.editingData[instruction.Id + '-error'] = false;
                 $scope.isLoaded = false;
                 $scope.isVisible = true;
                 if (isNew) {
@@ -113,10 +211,10 @@
                     init();
                 }
 
-                // $scope.reset(); 
             }).catch(function () {
 
                 $scope.editingData[competenceID + '-' + instruction.Id] = false;
+                $scope.editingData[instruction.Id + '-success'] = false;                
                 $scope.editingData[instruction.Id + '-error'] = true;
                 $scope.isLoaded = false;
                 $scope.isVisible = true;
@@ -127,10 +225,6 @@
             });
         };
 
-        $scope.reset = function () {
-            // delete $scope.editingData[competenceID + '-' + data.Id];
-        };
-
         var setInstructionRepeatDate = function (i) {
             $scope.competences.forEach(function (competence) {
 
@@ -138,29 +232,33 @@
 
                     if (instruction.Id === i.Id) {
 
+                        instruction.TrainingDate = i.TrainingDate;
+
                         var addNYears = function (date, n) {
                             var d = new Date(date);
                             d.setFullYear(d.getFullYear() + n);
                             return d.toJSON().slice(0, 10);
                         }
 
-                        switch (i.Category) {
-                            case "Cat. 1":
-                                instruction.RepeatDate = addNYears(i.TrainingDate, 1);
-                                break;
-                            case "Cat. 2":
-                                instruction.RepeatDate = addNYears(i.TrainingDate, 2);
-                                break;
-                            case "Cat. 3":
-                                instruction.RepeatDate = addNYears(i.TrainingDate, 3);
-                                break;
-                            default:
-                                instruction.RepeatDate = null;
+                        if (!i.TrainingDate) {
+                            instruction.RepeatDate = null;
+                        } else {
 
+                            switch (i.Category) {
+                                case "Cat. 1":
+                                    instruction.RepeatDate = addNYears(i.TrainingDate, 1);
+                                    break;
+                                case "Cat. 2":
+                                    instruction.RepeatDate = addNYears(i.TrainingDate, 2);
+                                    break;
+                                case "Cat. 3":
+                                    instruction.RepeatDate = addNYears(i.TrainingDate, 3);
+                                    break;
+                                default:
+                                    instruction.RepeatDate = null;
+
+                            }
                         }
-
-
-
                     }
                 });
             });
