@@ -229,3 +229,7 @@ ms-Datapicker uses modifier (BEM) begins with a lowercase letter
     text-align: right;
 }
 
+.databaseDownloadDate {
+    font-size: 10px;
+    cursor: help;
+}
