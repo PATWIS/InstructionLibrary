@@ -7,16 +7,15 @@
     function RaportController($scope, $timeout, dataFiltersFilter, JSOMService, ngDialog) {
         
         $scope.sortorder = '3';
-        $scope.quantity = 10;
         $scope.downloadDataFromSharePointList = true;
         JSOMService.getSiteUrl().then(function (result) {
             $scope.siteUrl = result;
         });
 
-        $scope.refresh = function () {
-            $scope.sortorder = '3';
+        $scope.refresh = function (sortorder) {
+            $scope.sortorder = sortorder;
             $scope.downloadDataFromSharePointList = true;
-            init();
+            init(sortorder);
         };
 
         $scope.setLoading = function (loading) {
@@ -37,12 +36,16 @@
 
         // LOCAL STORAGE 
         var storage = JSON.parse(localStorage.getItem("instructions"));
-        
+       
+            
         if (storage && storage.length) {
+
+
+            $scope.databaseDownloadDate = JSON.parse(localStorage.getItem("databaseDownloadDate"));
             $scope.finalObject = storage;
             $scope.setLoading(true);
             $timeout(function() {
-                $scope.report = dataFiltersFilter($scope.finalObject, 3);
+                $scope.report = storage;
                 $timeout(function(){
                     $scope.downloadDataFromSharePointList = false;
                     $scope.setLoading(false);
@@ -54,8 +57,8 @@
 
         init();
 
-        function init() {
-            console.log("init");
+        function init(sortorder) {
+ 
             var storage = [];
             return JSOMService.getEmployees().then(function (result) {
 
@@ -164,15 +167,16 @@
                     });
 
                     $scope.setLoading(true);
-                    $timeout(function() {
-                        $scope.report = dataFiltersFilter($scope.finalObject, 3);
+                    $timeout(function() {   
+                        $scope.report = dataFiltersFilter($scope.finalObject, sortorder ? sortorder : 3);
                         $timeout(function(){
                             $scope.setLoading(false);
                             $scope.downloadDataFromSharePointList = false;
                         }, 0);
                     }, 0);
                     localStorage.setItem("instructions", JSON.stringify($scope.finalObject));
-                    
+                    $scope.databaseDownloadDate = new Date();
+                    localStorage.setItem("databaseDownloadDate", JSON.stringify($scope.databaseDownloadDate));
                 });
 
             }).catch(function (errorMsg) {

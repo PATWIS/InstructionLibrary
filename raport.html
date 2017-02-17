@@ -18,8 +18,8 @@
 
   <div ng-cloak ng-if="!downloadDataFromSharePointList" style="width: 900px">
 
-<p class="refresh" ng-click="refresh()"><span><i class="ms-Icon ms-Icon--Refresh"></i> Verversen databank</span></p>
-
+<p class="refresh" ng-click="refresh(sortorder)"><span><i class="ms-Icon ms-Icon--Refresh"></i> Verversen databank</span></p>
+<span class="databaseDownloadDate" title="datum van de laatste databank">{{::databaseDownloadDate  | date:'dd/MM/yyyy HH:mm:ss'}}</span>
 <div class="ms-TextField filter">
   <label class="ms-Label">Filter - Datum herhaling eindigde en eindigt met in:</label>
   <select class="ms-TextField-field" ng-model="sortorder" ng-change="layoutDone(sortorder)">
@@ -43,19 +43,19 @@
     <tr class="avoid" ng-repeat="obj in report track by obj.uid">
       <!-- <td>{{$index +1}}</td> -->
       <td>
-        <a class="elipsis" ng-href="{{::siteUrl}}/Lists/Overzicht%20Medewerkers/Item/displayifs.aspx?ID={{::obj.EmployeeId}}" title="{{::obj.Name}}"
-          ng-bind="::obj.Name"></a>
+        <a class="elipsis" ng-href="{{::siteUrl}}/Lists/Overzicht%20Medewerkers/Item/displayifs.aspx?ID={{obj.EmployeeId}}" title="{{obj.Name}}"
+          ng-bind="obj.Name"></a>
       </td>
       <td>
-        <a class="elipsis" ng-href="{{::siteUrl}}/Production%20instructions/Forms/DispForm.aspx?ID={{::obj.InstructionId}}" title="{{::obj.Instruction}}"
-          ng-bind="::obj.Instruction"></a>
+        <a class="elipsis" ng-href="{{::siteUrl}}/Production%20instructions/Forms/DispForm.aspx?ID={{obj.InstructionId}}" title="{{obj.Instruction}}"
+          ng-bind="obj.Instruction"></a>
       </td>
       <td>
-        <a class="elipsis" ng-href="{{::siteUrl}}/Lists/Overzicht%20Competenties/DispForm.aspx?ID={{::obj.CompetenceId}}" title="{{::obj.Competence}}"
-          ng-bind="::obj.Competence"></a>
+        <a class="elipsis" ng-href="{{::siteUrl}}/Lists/Overzicht%20Competenties/DispForm.aspx?ID={{obj.CompetenceId}}" title="{{obj.Competence}}"
+          ng-bind="obj.Competence"></a>
       </td>
-      <td ng-bind="::obj.TrainingDate | date:'dd/MM/yyyy'"></td>
-      <td ng-bind="::obj.RepeatDate | date:'dd/MM/yyyy'"></td>
+      <td ng-bind="obj.TrainingDate | date:'dd/MM/yyyy'"></td>
+      <td ng-bind="obj.RepeatDate | date:'dd/MM/yyyy'"></td>
 
     </tr>
   </tbody>
