@@ -284,7 +284,7 @@
                     var deferred = $q.defer();
                     contextLoaded.promise.then(function () {
                         var listTitle = 'Instructie Trainingen';
-                        var viewTitle = 'Expire for 3 months';
+                        var viewTitle = 'All Items';
 
                         function getItemsFromView(listTitle, viewTitle) {
 
