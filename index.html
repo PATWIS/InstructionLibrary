@@ -4,7 +4,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ng-dialog/0.4.0/css/ngDialog-theme-plain.min.css">
 <link rel="stylesheet" href="https://infoprojektgdansk.sharepoint.com/sites/SPDevInstructions/Style%20Library/Styles/styles.css"
 />
-
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://infoprojektgdansk.sharepoint.com/sites/SPDevInstructions/Style%20Library/Scripts/picker.js"></script>
@@ -14,60 +13,70 @@
 <script src="https://infoprojektgdansk.sharepoint.com/sites/SPDevInstructions/Style%20Library/App/app.js"></script>
 <script src="https://infoprojektgdansk.sharepoint.com/sites/SPDevInstructions/Style%20Library/App/Controllers/MainController.js"></script>
 <script src="https://infoprojektgdansk.sharepoint.com/sites/SPDevInstructions/Style%20Library/App/Services/JSOMService.js"></script>
-<section id="employeeCard" ng-app="app" ng-controller="MainController">
+
+<section ng-app="app" ng-controller="MainController">
     <div ng-if="loading" ng-cloak class="spinner">
         <uif-spinner> Loading...</uif-spinner>
     </div>
-    <table ng-hide="loading && !instruction.TrainingDate" ng-cloak class="ms-Table">
-        <tr>
-            <th>Competentie</th>
-            <th>Datum aftekenen</th>
-            <th>Datum herhaling</th>
-            <th>Instructie</th>
-            <th>Datum aftekenen</th>
-            <th>Datum herhaling</th>
-        </tr>
-        <tbody>
-            <tr ng-repeat-start="competence in ::competences track by $index">
-                <td rowspan="{{competence.Instructions.length+1}}"><a class="elipsis" ng-href="{{::siteUrl}}/Lists/Overzicht%20Competenties/DispForm.aspx?ID={{::competence.Id}}"
-                        title="{{::competence.Name}}">{{::competence.Name}}</a></td>
-                <td class="date-row" rowspan="{{competence.Instructions.length+1}}">
-                    <uif-spinner ng-show="editingData[competence.Id+'--traningDate'] && isLoaded"></uif-spinner>
-                    <div class="editDate" ng-hide="editingData[competence.Id+'--traningDate'] && isLoaded">
-                        <span ng-hide="editingData[competence.Id+'--traningDate'] && !isLoaded"><i ng-if="editingData[competence.Id+'--traningDate' + '-success']" class="ms-Icon ms-Icon--SkypeCircleCheck success" title="the date was updated successfully"></i></span>
-                        <span ng-hide="editingData[competence.Id+'--traningDate'] && !isLoaded"><i ng-if="editingData[competence.Id+'--traningDate' + '-error']" class="ms-Icon ms-Icon--StatusErrorFull error" title="something went wrong, check the console (f12)"></i></span>
-                        <span ng-hide="editingData[competence.Id+'--traningDate'] && !isLoaded">{{!competence.TrainingDate ? "not set" : (competence.TrainingDate | date:'dd/MM/yyyy') }}</span>
-                        <i ng-hide="editingData[competence.Id+'--traningDate'] || !isVisible" class="ms-Icon ms-Icon--Edit editElem" ng-click="editCompetenceTraningDate(competence)"></i>
-                    </div>
-                </td>
-                <td class="date-row" rowspan="{{competence.Instructions.length+1}}">
-                    <uif-spinner ng-show="editingData[competence.Id+'--repeatDate'] && isLoaded"></uif-spinner>
-                    <div class="editDate" ng-hide="editingData[competence.Id+'--repeatDate'] && isLoaded">
-                        <span ng-hide="editingData[competence.Id+'--repeatDate'] && !isLoaded"><i ng-if="editingData[competence.Id+'--repeatDate' + '-success']" class="ms-Icon ms-Icon--SkypeCircleCheck success" title="thr date was updated successfully"></i></span>
-                        <span ng-hide="editingData[competence.Id+'--repeatDate'] && !isLoaded"><i ng-if="editingData[competence.Id+'--repeatDate' + '-error']" class="ms-Icon ms-Icon--StatusErrorFull error" title="something went wrong, check the console (f12)"></i></span>
-                        <span ng-hide="editingData[competence.Id+'--repeatDate'] && !isLoaded">{{!competence.RepeatDate ? "not set" : (competence.RepeatDate | date:'dd/MM/yyyy')}}</span>
-                        <i ng-hide="editingData[competence.Id+'--repeatDate'] || !isVisible" class="ms-Icon ms-Icon--Edit editElem" ng-click="editCompetenceRepeatDate(competence)"></i>
-                    </div>
-                </td>
-            </tr>
+    <div ng-if="!existData && !loading">No data, please add competenties to employee.</div>
+    <div id="employeeCard" ng-if="existData">
 
-            <tr ng-repeat="instruction in competence.Instructions" ng-repeat-end>
-                <td>
-                    <a class="elipsis" ng-href="{{::siteUrl}}/Production%20instructions/Forms/DispForm.aspx?ID={{::instruction.Id}}" title="{{::instruction.Name}}">{{::instruction.Name}}</a>
-                </td>
-                <td class="date-row">
-                    <uif-spinner ng-show="editingData[competence.Id+'-'+instruction.Id] && isLoaded"></uif-spinner>
-                    <div class="editDate" ng-hide="editingData[competence.Id+'-'+instruction.Id] && isLoaded">
-                        <span ng-hide="editingData[competence.Id+'-'+instruction.Id] && !isLoaded"><i ng-if="editingData[instruction.Id + '-success']" class="ms-Icon ms-Icon--SkypeCircleCheck success" title="the date was updated successfully"></i></span>
-                        <span ng-hide="editingData[competence.Id+'-'+instruction.Id] && !isLoaded"><i ng-if="editingData[instruction.Id + '-error']" class="ms-Icon ms-Icon--StatusErrorFull error" title="something went wrong, check the console (f12)"></i></span>
-                        <span ng-hide="editingData[competence.Id+'-'+instruction.Id] && !isLoaded">{{!instruction.TrainingDate ? "not set" : (instruction.TrainingDate | date:'dd/MM/yyyy')}}</span>
-                        <i ng-hide="editingData[competence.Id+'-'+instruction.Id] || !isVisible" class="ms-Icon ms-Icon--Edit editElem" ng-click="editInstructionTraningDate(competence.Id, instruction)"></i>
-                    </div>
-                </td>
-                <td class="date-row">{{!instruction.RepeatDate ? "not set" : (instruction.RepeatDate | date:'dd/MM/yyyy')}}</td>
-            </tr>
-        </tbody>
-    </table>
+        <table ng-hide="loading && !instruction.TrainingDate" ng-cloak class="ms-Table">
+            <tr>
+            <th>Competentie</th>
+            <th class="dateTypeColumn">Datum aftekenen</th>
+            <th class="dateTypeColumn">Datum herhaling</th>
+            <th>Instructie</th>
+            <th class="dateTypeColumn">Datum aftekenen</th>
+            <th class="dateTypeColumn">Datum herhaling</th>
+        </tr>
+            <tbody>
+                <tr ng-repeat-start="competence in ::competences track by $index">
+                    <td rowspan="{{competence.Instructions.length+1}}">
+                        <span ng-if="!competence.Name">Geen Competentie</span>
+                        <a ng-if="competence.Name" class="elipsis" ng-href="{{::siteUrl}}/Lists/Overzicht%20Competenties/DispForm.aspx?ID={{::competence.Id}}"
+                            title="{{::competence.Name}}">{{::competence.Name}}</a></td>
+                    <td class="date-row" rowspan="{{competence.Instructions.length+1}}">
+                        <uif-spinner ng-show="editingData[competence.Id+'--traningDate'] && isLoaded"></uif-spinner>
+                        <div class="editDate" ng-hide="editingData[competence.Id+'--traningDate'] && isLoaded">
+                            <span ng-hide="editingData[competence.Id+'--traningDate'] && !isLoaded"><i ng-if="editingData[competence.Id+'--traningDate' + '-success']" class="ms-Icon ms-Icon--SkypeCircleCheck success" title="the date was updated successfully"></i></span>
+                            <span ng-hide="editingData[competence.Id+'--traningDate'] && !isLoaded"><i ng-if="editingData[competence.Id+'--traningDate' + '-error']" class="ms-Icon ms-Icon--StatusErrorFull error" title="something went wrong, check the console (f12)"></i></span>
+                            <span ng-hide="editingData[competence.Id+'--traningDate'] && !isLoaded">{{!competence.TrainingDate ? "not set" : (competence.TrainingDate | date:'dd/MM/yyyy') }}</span>
+                            <span ng-show="competence.Name"><i ng-hide="editingData[competence.Id+'--traningDate'] || !isVisible" class="ms-Icon ms-Icon--Edit editElem" ng-click="editCompetenceTraningDate(competence)"></i></span>
+                        </div>
+                    </td>
+                    <td class="date-row" rowspan="{{competence.Instructions.length+1}}">
+                        <uif-spinner ng-show="editingData[competence.Id+'--repeatDate'] && isLoaded"></uif-spinner>
+                        <div class="editDate" ng-hide="editingData[competence.Id+'--repeatDate'] && isLoaded">
+                            <span ng-hide="editingData[competence.Id+'--repeatDate'] && !isLoaded"><i ng-if="editingData[competence.Id+'--repeatDate' + '-success']" class="ms-Icon ms-Icon--SkypeCircleCheck success" title="thr date was updated successfully"></i></span>
+                            <span ng-hide="editingData[competence.Id+'--repeatDate'] && !isLoaded"><i ng-if="editingData[competence.Id+'--repeatDate' + '-error']" class="ms-Icon ms-Icon--StatusErrorFull error" title="something went wrong, check the console (f12)"></i></span>
+                            <span ng-hide="editingData[competence.Id+'--repeatDate'] && !isLoaded">{{!competence.RepeatDate ? "not set" : (competence.RepeatDate | date:'dd/MM/yyyy')}}</span>
+                            <span ng-show="competence.Name"><i ng-hide="editingData[competence.Id+'--repeatDate'] || !isVisible" class="ms-Icon ms-Icon--Edit editElem" ng-click="editCompetenceRepeatDate(competence)"></i></span>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr ng-repeat="instruction in competence.Instructions" ng-repeat-end>
+                    <td><span ng-if="!instruction.Name">geen instructie</span>
+                        <a ng-if="instruction.Name" class="elipsis" ng-href="{{::siteUrl}}/Production%20instructions/Forms/DispForm.aspx?ID={{::instruction.Id}}"
+                            title="{{::instruction.Name}}">{{::instruction.Name}}</a>
+                    </td>
+                    <td class="date-row">
+                        <uif-spinner ng-show="editingData[competence.Id+'-'+instruction.Id] && isLoaded"></uif-spinner>
+                        <div class="editDate" ng-hide="editingData[competence.Id+'-'+instruction.Id] && isLoaded">
+                            <span ng-hide="editingData[competence.Id+'-'+instruction.Id] && !isLoaded"><i ng-if="editingData[instruction.Id + '-success']" class="ms-Icon ms-Icon--SkypeCircleCheck success" title="the date was updated successfully"></i></span>
+                            <span ng-hide="editingData[competence.Id+'-'+instruction.Id] && !isLoaded"><i ng-if="editingData[instruction.Id + '-error']" class="ms-Icon ms-Icon--StatusErrorFull error" title="something went wrong, check the console (f12)"></i></span>
+                            <span ng-hide="editingData[competence.Id+'-'+instruction.Id] && !isLoaded">{{!instruction.TrainingDate ? "not set" : (instruction.TrainingDate | date:'dd/MM/yyyy')}}</span>
+                            <span ng-show="instruction.Name"><i ng-hide="editingData[competence.Id+'-'+instruction.Id] || !isVisible" class="ms-Icon ms-Icon--Edit editElem" ng-click="editInstructionTraningDate(competence.Id, instruction)"></i></span>
+                        </div>
+                    </td>
+                    <td class="date-row">{{!instruction.RepeatDate ? "not set" : (instruction.RepeatDate | date:'dd/MM/yyyy')}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+
+    </div>
 
     <!-- EDIT NG DIALOG  -->
     <script type="text/ng-template" id="editDateNgDialog">

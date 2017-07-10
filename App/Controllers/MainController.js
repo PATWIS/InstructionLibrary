@@ -18,11 +18,11 @@
             } else {
                 return false;
             }
-            
+
         };
 
         $scope.editCompetenceTraningDate = function (data) {
-
+         
             if (!data.TrainingDate) {
                 data.TrainingDate = "";
             }
@@ -59,7 +59,7 @@
 
 
         $scope.editCompetenceRepeatDate = function (data) {
-
+          
             if (!data.RepeatDate) {
                 data.RepeatDate = "";
             }
@@ -125,16 +125,17 @@
 
             dialog.closePromise.then(function (ngDialogData) {
                 if (ngDialogData.value) {
-                    var competence = ngDialogData.value.Object;
+                    var instr = ngDialogData.value.Object;
                     var traningDate = ngDialogData.value.EditDate;
                     if (ngDialogData.value.NotSet) {
                         traningDate = null;
                     }
+                    instruction.TrainingDate = traningDate;
+                    instr.TrainingDate = traningDate;
                     $scope.editingData[competenceID + '-' + instruction.Id] = true;
                     $scope.isVisible = false;
                     $scope.isLoaded = true;
-                    instruction.TrainingDate = traningDate;
-                    competence.TrainingDate = traningDate;
+
                     $scope.saveInstructionTraningDate(competenceID, instruction);
                 }
             });
@@ -150,7 +151,7 @@
                 $scope.isLoaded = false;
                 $scope.isVisible = true;
 
-                if (isNew) {
+                if (isNew) {      
                     $scope.loading = true;
                     init();
                 }
@@ -197,7 +198,7 @@
         };
 
         $scope.saveInstructionTraningDate = function (competenceID, instruction) {
-
+          
             $scope.isLoaded = true;
             setInstructionRepeatDate(instruction);
             JSOMService.updateInstructionDates(instruction, $scope.employeeId).then(function (isNew) {
@@ -214,18 +215,20 @@
             }).catch(function () {
 
                 $scope.editingData[competenceID + '-' + instruction.Id] = false;
-                $scope.editingData[instruction.Id + '-success'] = false;                
+                $scope.editingData[instruction.Id + '-success'] = false;
                 $scope.editingData[instruction.Id + '-error'] = true;
                 $scope.isLoaded = false;
                 $scope.isVisible = true;
-                instruction.TrainingDate = null;
-                instruction.RepeatDate = null;
-                setInstructionRepeatDate(instruction);
+               
+                // instruction.TrainingDate = null;
+                // instruction.RepeatDate = null;
+                // setInstructionRepeatDate(instruction);
 
             });
         };
 
         var setInstructionRepeatDate = function (i) {
+        
             $scope.competences.forEach(function (competence) {
 
                 competence.Instructions.forEach(function (instruction) {
@@ -264,6 +267,7 @@
             });
         };
 
+
         function getUrlVars() {
             var vars = {};
             var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
@@ -275,7 +279,8 @@
         init();
 
         function init() {
-
+            $scope.existData = false;
+            $scope.competences = [];
             JSOMService.getSiteUrl().then(function (result) {
                 $scope.siteUrl = result;
 
@@ -283,7 +288,14 @@
 
             // var valuesToLoad = 3;
             JSOMService.getEmployeeCompetences($scope.employeeId).then(function (result) {
-                $scope.competences = result;
+                           
+                if (result.length === 0) {
+                    $scope.loading = false;
+                 
+                } else {
+                     $scope.existData = true;
+                    $scope.competences = result;
+                }
 
             }).then(function () {
 
@@ -318,7 +330,7 @@
 
                             var competence = resultLookup[obj.Id];
 
-                            if (competence) {
+                            if (competence) {                               
                                 obj.ItemId = competence.ItemId;
                                 obj.TrainingDate = competence.TrainingDate;
                                 obj.RepeatDate = competence.RepeatDate;
@@ -361,9 +373,9 @@
                             }
                         });
 
-                        $scope.competences[i].Instructions.sort(function (a, b) {
-                            return new Date(a.RepeatDate) - new Date(b.RepeatDate);
-                        });
+                        // $scope.competences[i].Instructions.sort(function (a, b) {
+                        //     return new Date(a.RepeatDate) - new Date(b.RepeatDate);
+                        // });
                     };
                     $scope.loading = false;
                 });

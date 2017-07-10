@@ -45,7 +45,7 @@ table {
 
 
 .date-row {
-    width: 144px;
+    min-width: 100px;
     text-align: center;
 }
 
@@ -67,7 +67,7 @@ table {
 }
 
 #employeeCard > .ms-Table {
-    width: 820px;
+    width: 80%;
     border: 1px solid #eaeaea;
     /*margin-right: auto;*/
     /*margin-left: auto;*/
@@ -165,7 +165,7 @@ tr[ng-repeat-start] + tr {
 
 .elipsis {
     vertical-align: text-top;
-    width: 120px;
+    width: 330px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
